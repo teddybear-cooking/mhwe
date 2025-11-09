@@ -1,0 +1,16 @@
+export async function apiGet<T = unknown>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(path, { ...init, method: init?.method ?? "GET" });
+  if (!res.ok) throw new Error(`GET ${path} failed: ${res.status}`);
+  return (await res.json()) as T;
+}
+
+export async function apiPost<T = unknown>(path: string, body: unknown, init?: RequestInit): Promise<T> {
+  const res = await fetch(path, {
+    ...init,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`POST ${path} failed: ${res.status}`);
+  return (await res.json()) as T;
+}
